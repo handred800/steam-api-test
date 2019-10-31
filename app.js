@@ -6,7 +6,7 @@ const fetch = require("node-fetch");
 const convert = require("xml-js");
 const rateLimit = require("express-rate-limit");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Rate limiting - Goodreads limits to 1/sec, so we should too
 
@@ -27,11 +27,11 @@ app.use(limiter)
 // Test route, visit localhost:3000 to confirm it's working
 app.get("/", (req, res) => {
 
-	fs.readFile('TestFile.txt', function (err, data) {
+	fs.readFile('README.md', function (err, data) {
 	    if (err) throw err; 
-	    console.log(data.toString());
+	    res.send(data.toString());
 	});	
-	res.send("Welcome!")
+	// res.send("Welcome!")
 });
 
 // Our Goodreads relay route!
