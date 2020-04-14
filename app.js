@@ -46,6 +46,9 @@ app.get("/api/search", async (req, res) => {
 		const response = await fetch(`http://store.steampowered.com/api/appdetails?${searchString}`)
 		const json = await response.json();
 
+		res.header('Access-Control-Allow-Origin', '*');
+  		res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+
 		return res.json({
             success: true,
             data:json[req.query.appids].data
