@@ -3,8 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const fs = require('fs');
 const fetch = require("node-fetch");
-const convert = require("xml-js");
 const rateLimit = require("express-rate-limit");
+const md = require("node-markdown").Markdown;
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -23,26 +23,22 @@ const limiter = rateLimit({
 app.use(limiter)
 
 // Routes
-
-// Test route, visit localhost:3000 to confirm it's working
 app.get("/", (req, res) => {
 
 	fs.readFile('README.md', function (err, data) {
-	    if (err) throw err; 
-	    res.send(data.toString());
-	});	
-	// res.send("Welcome!")
+		if (err) throw err;
+		html = md(data.toString())
+	    res.send(html);
+	});
+
+	
 });
 
 // Our Goodreads relay route!
 app.get("/api/search", async (req, res) => {
 	try {
-		// This uses string interpolation to make our search query string
-		// it pulls the posted query param and reformats it for goodreads
 		const searchString = `appids=${req.query.appids}`;
 
-		// It uses node-fetch to call the goodreads api, and reads the key from .env
-		// const response = await fetch(`https://www.goodreads.com/search/index.xml?key=${process.env.GOODREADS_API_KEY}&${searchString}`);
 		const response = await fetch(`http://store.steampowered.com/api/appdetails?${searchString}`)
 		const json = await response.json();
 
@@ -61,7 +57,4 @@ app.get("/api/search", async (req, res) => {
 	}
 })
 
-// This spins up our sever and generates logs for us to use.
-// Any console.log statements you use in node for debugging will show up in your
-// terminal, not in the browser console!
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
