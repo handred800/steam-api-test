@@ -39,7 +39,7 @@ app.get("/api/search", async (req, res) => {
 	try {
 		const searchString = `appids=${req.query.appids}`;
 
-		const response = await fetch(`http://store.steampowered.com/api/appdetails?${searchString}&l=tchinese&cc=TWD`)
+		const response = await fetch(`http://store.steampowered.com/api/appdetails?${searchString}&l=tchinese&cc=tw`)
 		const json = await response.json();
 
 		res.header('Access-Control-Allow-Origin', '*');
